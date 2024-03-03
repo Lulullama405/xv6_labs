@@ -26,6 +26,8 @@ extern char trampoline[]; // trampoline.S
 // must be acquired before any p->lock.
 struct spinlock wait_lock;
 
+
+
 // Allocate a page for each process's kernel stack.
 // Map it high in memory, followed by an invalid
 // guard page.
@@ -288,7 +290,8 @@ fork(void)
     return -1;
   }
   np->sz = p->sz;
-
+  //copy trace mask from parent to child.
+  np->trace_num = p->trace_num;
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -653,4 +656,18 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+
+// get the number of processes whose state is not UNUSED - lab2-2
+uint64 getnproc(void) {
+    uint64 n;
+    struct proc *p;
+    // 遍历proc数组, 找非UNUSED状态进程
+    for(n=0, p = proc; p < &proc[NPROC]; ++p) {
+        if(p->state != UNUSED) {
+            ++n;
+        }
+    }
+    return n;
 }
