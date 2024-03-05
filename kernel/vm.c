@@ -50,10 +50,10 @@ kvmmake(void)
 }
 
 // Initialize the one kernel_pagetable
-void
+pagetable_t
 kvminit(void)
 {
-  kernel_pagetable = kvmmake();
+  return kvmmake();
 }
 
 // Switch h/w page table register to the kernel's page table,
